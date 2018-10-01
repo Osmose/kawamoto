@@ -55,6 +55,12 @@ class ShortRegister extends EventEmitter {
   getUShort() {
     return this.value.readUInt16LE(0);
   }
+
+  incr(amount = 1) {
+    const value = this.getUShort();
+    this.setUShort(value + amount);
+    return value;
+  }
 }
 
 class ByteRegister extends EventEmitter {

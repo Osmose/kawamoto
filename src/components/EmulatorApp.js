@@ -62,7 +62,7 @@ class ByteRegister extends React.Component {
     return (
       <div>
         <strong>{name}</strong>
-        {value.toString(16)}
+        0x{value.toString(16)}
       </div>
     );
   }
@@ -91,7 +91,7 @@ class ShortRegister extends React.Component {
     return (
       <div>
         <strong>{name}</strong>
-        {value.toString(16)}
+        0x{value.toString(16)}
       </div>
     );
   }
@@ -119,10 +119,27 @@ class InstructionLog extends React.Component {
       <ul>
         {instructionLogs.map((instructionLog, index) => (
           <li key={index}>
-            {instructionLog.name} ({instructionLog.cycles})
+            {instructionLog.name} [{instructionLog.args.map(arg => `0x${arg.toString(16)}`).join(',')}] ({instructionLog.cycles})
           </li>
         ))}
       </ul>
+    )
+  }
+}
+
+class MemoryViewer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+
+    }
+  }
+
+  render() {
+    return (
+      <table>
+
+      </table>
     )
   }
 }

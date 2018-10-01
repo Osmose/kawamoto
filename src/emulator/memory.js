@@ -11,6 +11,11 @@ export default class Memory {
     throw new Error(`Unsupported memory address ${address.toString(16)}`);
   }
 
+  getUShort(address) {
+    const low = this.getUByte(address);
+    const high = this.getUByte(address + 1);
+    return (high << 8) & low;
+  }
 }
 
 class ROM {

@@ -16,9 +16,7 @@ export default class Emulator extends EventEmitter {
   }
 
   cycle() {
-    let programCounter = this.cpu.PC.getUShort();
-    const opcode = this.memory.getUByte(programCounter);
-    programCounter++;
+    const opcode = this.memory.getUByte(this.cpu.PC.incr());
 
     const instruction = instructions[opcode];
     if (!instruction) {
@@ -26,19 +24,13 @@ export default class Emulator extends EventEmitter {
         name: `UNRECOGNIZED OPCODE ${opcode.toString(16)}`,
         cycles: 0,
       });
-      this.cpu.PC.setUShort(programCounter);
       return;
     }
 
-    const {name, args, cycles, callback} = instruction();
-    const callbackArgs = [];
-    for (let k = 0; k < args; k++) {
-      callbackArgs.push(this.memory.getUByte(programCounter));
-      programCounter++;
-    }
+    const {name, args, cycles, callback} = instruction(this);
+    const callbackArgs = args.map(arg => arg(this));
     callback(...callbackArgs);
 
-    this.emit('instruction_ran', {name, cycles});
-    this.cpu.PC.setUShort(programCounter);
+    this.emit('instruction_ran', {name, cycles, args: callbackArgs});
   }
 }
